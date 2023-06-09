@@ -1,5 +1,7 @@
-import { Button, Form, Input } from "antd";
 import React from "react";
+import { Button, Form, Input } from "antd";
+import { authService } from "../../firebaseSetting";
+import { useNavigate } from "react-router";
 
 const FormWrapStyle = {
   display : "flex",
@@ -39,19 +41,28 @@ const validateMessages = {
 /* eslint-disable no-template-curly-in-string */
 
 const SignUp : React.FC = () => {
-  const onFinish = (values : any) => {
+  const [form] = Form.useForm();
+  const navigate = useNavigate();
 
-    /* values = user : {email, emailCheck, password, passwordCheck}
-      1. 이메일 형식 확인
-      2. 이메일 일치 확인
-      3. 비밀번호 일치 확인
-    */
+  const onFinish = async (values : any) => {
+    try{
+      await authService.createUserWithEmailAndPassword(
+        values.user.email, values.user.password
+      )
 
+      await authService.currentUser?.updateProfile({displayName : values.user.displayName})
+      // await updateProfile(data , {displayName : values.user.displayName, photoURL : ""})
+
+      navigate("/");
+    } catch(err) {
+      console.log(err);
+    }
   }
 
   return (
     <div style={FormWrapStyle}>
-      <Form labelCol={{span : 6}} 
+      <Form form={form}
+            labelCol={{span : 6}} 
             name="signup" 
             style={FormStyle}
             validateMessages={validateMessages}
@@ -70,6 +81,9 @@ const SignUp : React.FC = () => {
         </Form.Item>
         <Form.Item name={['user', 'passwordCheck']} label="비밀번호 확인" rules={[{required : true}]}>
           <Input type="password"/>
+        </Form.Item>
+        <Form.Item name={['user', 'displayName']} label="닉네임" rules={[{required : true}]}>
+          <Input type="text"/>
         </Form.Item>
         <Form.Item >
           <Button type="primary" htmlType="submit" style={FormButtonStyle}>
