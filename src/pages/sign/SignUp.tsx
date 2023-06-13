@@ -45,14 +45,32 @@ const SignUp : React.FC = () => {
   const navigate = useNavigate();
 
   const onFinish = async (values : any) => {
+    const signUpUserInfo = values.user;
+
+    if(signUpUserInfo.email.toLowerCase() !== signUpUserInfo.emailCheck.toLowerCase()){
+      alert("이메일을 확인해주세요.");
+      return;
+    }
+
+    if(signUpUserInfo.password.length < 8){
+      alert("비밀번호는 8자리 이상으로 설정해주세요.");
+      return;
+    }
+
+    if(signUpUserInfo.password.toLowerCase() !== signUpUserInfo.passwordCheck.toLowerCase()){
+      alert("비밀번호를 확인해주세요.");
+      return;
+    }
+
+
     try{
       await authService.createUserWithEmailAndPassword(
-        values.user.email, values.user.password
+        signUpUserInfo.email, signUpUserInfo.password
       )
 
-      await authService.currentUser?.updateProfile({displayName : values.user.displayName})
-      // await updateProfile(data , {displayName : values.user.displayName, photoURL : ""})
-
+      await authService.currentUser?.updateProfile({displayName : signUpUserInfo.displayName})
+      
+      alert("회원가입이 완료되었습니다.");
       navigate("/");
     } catch(err) {
       console.log(err);
