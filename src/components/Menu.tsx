@@ -11,10 +11,10 @@ const menuItems : MenuItem[] = [
     getItem('일기 목록', '1', '/diarylist'),
     getItem('일기 작성', '2', '/diarywrite'),
   ]),
-  getItem('가계부', 'sub2', '', [
-    getItem('가계부 목록', '3', '/accountlist'),
-    getItem('가계부 작성', '4', '/accountwrite'),
-  ]),
+  // getItem('가계부', 'sub2', '', [
+  //   getItem('가계부 목록', '3', '/accountlist'),
+  //   getItem('가계부 작성', '4', '/accountwrite'),
+  // ]),
 ]
 
 // 메뉴 타입
