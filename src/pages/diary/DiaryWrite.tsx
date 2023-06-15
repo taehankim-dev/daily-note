@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import styled from 'styled-components'
 
 import { Form, Input, DatePicker, Button } from 'antd';
@@ -6,7 +6,7 @@ import dayjs from 'dayjs';
 import locale from 'antd/es/date-picker/locale/ko_KR';
 import 'dayjs/locale/ko';
 
-import {dbService, addDoc, collection, getDocs} from '../../firebaseSetting'
+import {dbService, addDoc, collection} from '../../firebaseSetting'
 import { useNavigate } from 'react-router';
 
 const DiaryFormWrap = styled.div`
@@ -24,6 +24,13 @@ const DiaryFormWrap = styled.div`
     transform:translate(0,0);
   }
 `
+
+
+/* eslint-disable no-template-curly-in-string */
+const validateMessages = {
+  required : "'${label}'은 필수사항입니다!",
+}
+/* eslint-disable no-template-curly-in-string */
 
 const { TextArea } = Input
 
@@ -61,18 +68,14 @@ const DailyWrite : React.FC = () => {
     }
   }, [navigate])
 
-  useEffect(() => {
-    const data = getDocs(collection(dbService, "diary"));
-    console.log(data)
-  }, [])
-
   return(
     <DiaryFormWrap>
       <Form form={form}
             labelCol={{span : 4}}
             initialValues={diaryValues}
+            validateMessages={validateMessages}
             onFinish={onFinishWrite}>
-        <Form.Item name={'date'} label='날짜'>
+        <Form.Item name={'date'} label='날짜' rules={[{required : true}]}>
           <DatePicker locale={locale} format={'YYYY-MM-DD'}/>
         </Form.Item>
         <Form.Item name={'weather'} label='날씨'>
@@ -81,10 +84,10 @@ const DailyWrite : React.FC = () => {
         <Form.Item name={'mood'} label='기분'>
           <Input placeholder='행복, 슬픔, 우울...'/>
         </Form.Item>
-        <Form.Item name={'title'} label='제목'>
+        <Form.Item name={'title'} label='제목' rules={[{required : true}]}>
           <Input placeholder='일기 제목'/>
         </Form.Item>
-        <Form.Item name={'body'} label='일기 내용'>
+        <Form.Item name={'body'} label='일기 내용' rules={[{required : true}]}>
           <TextArea rows={12}/>
         </Form.Item>
         <Form.Item style={{textAlign:'right'}}>
