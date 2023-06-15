@@ -6,7 +6,8 @@ import dayjs from 'dayjs';
 import locale from 'antd/es/date-picker/locale/ko_KR';
 import 'dayjs/locale/ko';
 
-import {dbService, addDoc, collection, getDocs, getAuth} from '../../firebaseSetting'
+import {dbService, addDoc, collection, getDocs} from '../../firebaseSetting'
+import { useNavigate } from 'react-router';
 
 const DiaryFormWrap = styled.div`
   max-width : 1200px;
@@ -28,6 +29,7 @@ const { TextArea } = Input
 
 const DailyWrite : React.FC = () => {
   const [form] = Form.useForm();
+  const navigate = useNavigate();
   
   //일기 작성 기본
   const diaryValues = {
@@ -50,14 +52,14 @@ const DailyWrite : React.FC = () => {
     }
 
     try{
-      // const userUid = getAuth().currentUser?.uid;
-      
       await addDoc(collection(dbService, 'diary'), docObj);
-      // const res = await addDoc(collection(dbService, 'diary'), "")
+      alert("작성이 완료되었습니다.");
+
+      navigate("/diarylist");
     } catch (err) {
       console.log(err)
     }
-  }, [])
+  }, [navigate])
 
   useEffect(() => {
     const data = getDocs(collection(dbService, "diary"));
