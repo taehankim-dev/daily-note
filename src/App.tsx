@@ -5,8 +5,27 @@ import { authService } from './firebaseSetting';
 import PagesRouters from './pages/PagesRouter';
 import HeaderComponets from "./components/Header";
 import MenuCompoents from './components/Menu';
+import styled from 'styled-components';
 
 const { Header, Sider, Content } = Layout;
+// BREAK_POINT_MOBILE = 768;
+// BREAK_POINT_TABLET = 992;
+// BREAK_POINT_PC = 1200;
+
+const LayoutWrapper = styled.div`
+  display: flex;
+  height : 94vh;
+
+  @media screen and (min-width : 768px){
+    width : 100vw;
+  }
+  
+  @media screen and (min-width : 1200px){
+    width: 70vw;
+    margin : auto;
+    box-shadow : 0px 0px 1px gray;
+  }
+`
 
 const headerStyle: React.CSSProperties = {
   textAlign: 'center',
@@ -42,22 +61,24 @@ const App: React.FC = () => {
   }, [])
 
   return (
-  <Space direction="vertical" style={{ width: '100%' }} size={[0, 48]}>
-    <Layout style={{minHeight : '100vh'}}>
-      <Header style={headerStyle}>
-        <HeaderComponets isLoggedIn={isLoggedIn} userObj={userObj}/>
-      </Header>
-      <Layout hasSider>
-        <Sider theme='light'>
-          <MenuCompoents />
-        </Sider>
-        <Content>
-          <PagesRouters/>
-        </Content>
-      </Layout>
-      {/* <Footer>Footer</Footer> */}
-    </Layout>
-  </Space>
+      <Space direction="vertical" style={{ width: '100%' }} size={[0, 48]}>
+          <Layout style={{minHeight : '100vh'}}>
+            <Header style={headerStyle}>
+              <HeaderComponets isLoggedIn={isLoggedIn} userObj={userObj}/>
+            </Header>
+            <LayoutWrapper>
+              <Layout hasSider>
+                <Sider theme='light'>
+                  <MenuCompoents />
+                </Sider>
+                <Content>
+                  <PagesRouters/>
+                </Content>
+              </Layout>
+            </LayoutWrapper>
+          {/* <Footer>Footer</Footer> */}
+        </Layout>
+      </Space>
   )
 }
 

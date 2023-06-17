@@ -48,14 +48,17 @@ const DailyWrite : React.FC = () => {
     body : "",
   }
 
+  console.log("here : ",dayjs(`${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()}`, 'YYYY-MM-DD'))
+
   //작성 완료!
   const onFinishWrite = useCallback( async(formValues : any) => {
     const docObj = {
-      date : formValues.date.$d,
+      date : new Date(formValues.date.$d).getTime(),
       weather : formValues.weather,
       mood : formValues.mood,
       title : formValues.title,
       body : formValues.body,
+      createdAt : Date.now(),
     }
 
     try{

@@ -7,7 +7,7 @@ import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 
 import {getAuth, browserSessionPersistence, setPersistence} from 'firebase/auth';
-import { addDoc, collection, getDocs } from 'firebase/firestore';
+import { addDoc, collection, getDocs, query, onSnapshot } from 'firebase/firestore';
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_APIKEY,
@@ -31,4 +31,4 @@ export const authService = firebase.auth();
 export {getAuth, browserSessionPersistence, setPersistence};
 
 export const dbService = getFirestore(app);
-export {addDoc, collection, getDocs}
+export {addDoc, collection, getDocs, query, onSnapshot}
