@@ -17,6 +17,20 @@ const DiaryList = styled.ul`
 
 const DiaryListItem = styled.li`
   width:100%;
+  padding : 1rem;
+  margin-top : 12px;
+  border: 1px solid #daf8fa;
+  border-radius : 12px;
+  background : #e5f6f7;
+  transition : all 0.3s;
+  cursor:pointer;
+  &:hover{
+    background : #d2e5fa;
+  }
+
+  &:first-child{
+    margin:0;
+  }
 `
 
 const DiaryListInfoWrap = styled.div`
@@ -31,13 +45,25 @@ const DiaryListInfoItem = styled.span`
   }
 `
 
+const DiaryListTitleWrap = styled.div`
+  height : 20px;
+  margin-top : 12px;
+  font-weight : bold;
+  font-size : 1.25rem;
+`
+
 const DiaryListBodyWrap = styled.div`
-  
+  margin-top : 12px;
+  padding : 0.25rem;
+  border: 1px solid #cfd7da;
+  border-radius : 4px;
 `
 
 const DailyList : React.FC = () => {
   const [contents, setContents] = useState<any[]>([])
+  const [contentsVisiable, setContentsVisiale] = useState<any[]>([]);
 
+  //일기 목록 가져오기.
   useEffect(() => {
     const getBoardList = async() => {
       const q = query(
@@ -59,6 +85,15 @@ const DailyList : React.FC = () => {
     getBoardList();
   }, [])
 
+  useEffect(() => {
+    const length = contents.length;
+
+    const visibleArr = new Array(length).fill(false);
+    setContentsVisiale(visibleArr);
+
+  }, [contents.length])
+
+  //일기 날짜 timestamp 형식에서 년월일 형식으로 변경.
   const changeTimeStampToDate = useCallback((time : Date) => {
     const day = new Date(time);
     const year = day.getFullYear();
@@ -68,23 +103,35 @@ const DailyList : React.FC = () => {
     return <span> {year}년 {month}월 {date}일</span>
   }, [])
 
-  console.log(contents)
+  //일기 리스트 클릭 시,
+  const diaryClick = (diaryItem : any, idx : number) => {
+    const newContents = contentsVisiable.map((item, index) => index === idx ? true : false);
+    setContentsVisiale(newContents);
+  }
 
   return(
     <DiaryListWrap>
       <DiaryList>
-        {contents.map(item => {
+        {contents.map((item, idx) => {
           return (
-            <DiaryListItem key={item.id}>
+            <DiaryListItem key={item.id} onClick={() => diaryClick(item, idx)}>
               <DiaryListInfoWrap>
                 <DiaryListInfoItem>{changeTimeStampToDate(item.date)}</DiaryListInfoItem> 
                 <DiaryListInfoItem>{item.weather}</DiaryListInfoItem>
                 <DiaryListInfoItem>{item.mood}</DiaryListInfoItem>
               </DiaryListInfoWrap>
-              <DiaryListBodyWrap>
-                내용
-                {item.body}
-              </DiaryListBodyWrap>
+              <DiaryListTitleWrap>
+                {item.title}
+              </DiaryListTitleWrap>
+              {contentsVisiable[idx]
+                ?
+                <DiaryListBodyWrap>
+                  {item.body}
+                </DiaryListBodyWrap>
+                :
+                <></>
+              }
+              
             </DiaryListItem>
           )
         })}
